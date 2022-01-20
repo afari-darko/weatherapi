@@ -1,47 +1,37 @@
-provider "azurerm" {
-    version = "2.5.0"
-    features {}
-}
-
-terraform {
-    backend "azurerm" {
-        resource_group_name  = "tf_rg_blobstore"
-        storage_account_name = "tfstoragebinarythistle"
-        container_name       = "tfstate"
-        key                  = "terraform.tfstate"
+terraform { 
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "=2.91.0"
     }
+  }
+}
+provider "azurerm" {
+  features {}
+}
+resource "azurerm_resource_group" "terraform_RG" {
+  name = "terraform_workspace"
+  location = "UK West"
 }
 
-variable "imagebuild" {
-  type        = string
-  description = "Latest Image Build"
-}
-
-
-
-resource "azurerm_resource_group" "tf_test" {
-  name = "tfmainrg"
-  location = "Australia East"
-}
-
-resource "azurerm_container_group" "tfcg_test" {
+resource "azurerm_container_group" "terraform_CG" {
   name                      = "weatherapi"
-  location                  = azurerm_resource_group.tf_test.location
-  resource_group_name       = azurerm_resource_group.tf_test.name
+  location                  = azurerm_resource_group.terraform_RG.location
+  resource_group_name       = azurerm_resource_group.terraform_RG.name
 
   ip_address_type     = "public"
-  dns_name_label      = "binarythistlewa"
+  dns_name_label      = "weatherapi"
   os_type             = "Linux"
 
   container {
       name            = "weatherapi"
-      image           = "binarythistle/weatherapi:${var.imagebuild}"
-        cpu             = "1"
-        memory          = "1"
+      image           = "afaridarko/docker-repo:weatherapi"
+        cpu           = "1"
+        memory        = "1"
 
         ports {
-            port        = 80
-            protocol    = "TCP"
+            port      = 80
+            protocol  = "TCP"
         }
   }
 }
