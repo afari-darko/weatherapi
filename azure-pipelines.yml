@@ -28,7 +28,7 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: |
           $(tag)
-    - task: Docker@3
+    - task: Docker@2
       inputs:
         containerRegistry: 'DockerHub'
         repository: 'afaridarko / docker-repo'
