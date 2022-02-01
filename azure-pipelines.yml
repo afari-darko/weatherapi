@@ -28,6 +28,14 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: |
           $(tag)
+    - task: Docker@3
+          inputs:
+            containerRegistry: 'DockerHub'
+            repository: 'afaridarko / docker-repo'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            tags: |
+          $(tag)
 - stage: Provision
   displayName: 'Terraforming on Azure...'
   dependsOn: Build
@@ -53,3 +61,9 @@ stages:
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
         TF_VAR_imagebuild: $(tag)
         
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'DockerHub'
+            repository: 'afaridarko / docker-repo'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
