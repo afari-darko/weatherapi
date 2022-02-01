@@ -22,14 +22,6 @@ stages:
     steps:
     - task: Docker@2
       inputs:
-        containerRegistry: 'Binarythistle Docker Hub'
-        repository: 'binarythistle/weatherapi'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(tag)
-    - task: Docker@2
-      inputs:
         containerRegistry: 'DockerHub'
         repository: 'afaridarko / docker-repo'
         command: 'buildAndPush'
